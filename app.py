@@ -1,30 +1,37 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ecommerce.db' 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Lista de categorías (simulación de una base de datos en memoria)
-categories = []
+db = SQLAlchemy(app)
 
-# Ruta para obtener todas las categorías
-@app.route('/api/categories', methods=['GET'])
-def get_categories():
-    return jsonify(categories)
+# Definición del modelo de Categoría
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), nullable=False)
 
-# Ruta para crear una nueva categoría
+    def __repr__(self):
+        return f'<Category {self.name}>'
+
+# Crear las tablas
+with app.app_context():
+    db.create_all()
+
 @app.route('/api/categories', methods=['POST'])
 def create_category():
-    new_category = request.json  # Obtiene los datos en formato JSON
-    categories.append(new_category)  # Añade la nueva categoría a la lista
-    return jsonify(new_category), 201
+    data = request.get_json()
+    new_category = Category(name=data['name'])
+    db.session.add(new_category)
+    db.session.commit()
+    return jsonify({"message": "Category created successfully"}), 201
 
-# Ruta para eliminar una categoría por ID
-@app.route('/api/categories/<int:category_id>', methods=['DELETE'])
-def delete_category(category_id):
-    if category_id < len(categories):
-        removed_category = categories.pop(category_id)
-        return jsonify(removed_category), 200
-    else:
-        return jsonify({"error": "Category not found"}), 404
+@app.route('/api/categories', methods=['GET'])
+def get_categories():
+    categories = Category.query.all()
+    categories_list = [{"id": category.id, "name": category.name} for category in categories]
+    return jsonify(categories_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
