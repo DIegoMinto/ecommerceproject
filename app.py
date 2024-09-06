@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_migrate import Migrate
 from models import db, Category, User 
 
 app = Flask(__name__)
@@ -7,7 +8,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Asociar la base de datos con la app
 db.init_app(app)
-
+# Configurar Flask-Migrate
+migrate = Migrate(app, db)
 # Crear las tablas en la base de datos
 with app.app_context():
     db.create_all()
@@ -16,17 +18,55 @@ with app.app_context():
 @app.route('/api/categories', methods=['POST'])
 def create_category():
     data = request.get_json()
-    new_category = Category(name=data['name'])
+    new_category = Category(name=data['name'], description=data.get('description'))
     db.session.add(new_category)
     db.session.commit()
     return jsonify({"message": "Category created successfully"}), 201
+
 
 # Ruta para obtener categorías
 @app.route('/api/categories', methods=['GET'])
 def get_categories():
     categories = Category.query.all()
+    return jsonify([category.to_dict() for category in categories])
+
+
+# Ruta para buscar categorías por nombre
+@app.route('/api/categories/search', methods=['GET'])
+def search_categories():
+    name_query = request.args.get('name', '')  # Obtiene el parámetro de búsqueda 'name' de la URL
+    categories = Category.query.filter(Category.name.ilike(f'%{name_query}%')).all()  # Búsqueda por nombre
     categories_list = [{"id": category.id, "name": category.name} for category in categories]
     return jsonify(categories_list)
+
+# Ruta para eliminar una categoría por ID
+@app.route('/api/categories/<int:id>', methods=['DELETE'])
+def delete_category(id):
+    category = Category.query.get(id)
+    if category is None:
+        return jsonify({"message": "Category not found"}), 404
+    db.session.delete(category)
+    db.session.commit()
+    return jsonify({"message": "Category deleted successfully"}), 200
+
+# Ruta para actualizar una categoría por ID
+@app.route('/api/categories/<int:id>', methods=['PUT'])
+def update_category(id):
+    data = request.get_json()
+    category = Category.query.get(id)
+    
+    if not category:
+        return jsonify({"message": "Category not found"}), 404
+    
+    if 'name' in data:
+        category.name = data['name']
+    if 'description' in data:
+        category.description = data['description']
+    
+    db.session.commit()
+    
+    return jsonify({"message": "Category updated successfully"}), 200
+
 
 # Ruta para registrar un usuario
 @app.route('/api/users/register', methods=['POST'])
