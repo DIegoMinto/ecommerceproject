@@ -1,6 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_migrate import Migrate
 from models import db, Category, User 
+from flask import send_from_directory
+from flask import render_template
+
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ecommerce.db' 
@@ -13,6 +17,11 @@ migrate = Migrate(app, db)
 # Crear las tablas en la base de datos
 with app.app_context():
     db.create_all()
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('', filename)
+
 
 # Ruta para crear categorías
 @app.route('/api/categories', methods=['POST'])
@@ -67,6 +76,16 @@ def update_category(id):
     
     return jsonify({"message": "Category updated successfully"}), 200
 
+# Ruta para obtener todos los usuarios
+@app.route('/api/users', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    return jsonify([{
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+        'rol': user.rol
+    } for user in users])
 
 # Ruta para registrar un usuario
 @app.route('/api/users/register', methods=['POST'])
@@ -91,6 +110,11 @@ def login_user():
         return jsonify({"message": "Login successful", "user": {"id": user.id, "username": user.username}}), 200
     else:
         return jsonify({"message": "Invalid username or password"}), 401
+ 
+# Ruta para la interfaz del login 
+@app.route('/login')
+def login():
+    return render_template('login.html')
 
 # Inicializar la aplicación
 if __name__ == '__main__':

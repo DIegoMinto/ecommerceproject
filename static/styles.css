@@ -1,0 +1,60 @@
+/* Configuración del cuerpo de la página */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: #fff; /* Color del texto */
+    background: url('fondo1.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Estilo del contenedor del login */
+.login-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.6); /* Fondo oscuro semi-transparente */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+/* Estilo de los elementos del formulario */
+h2 {
+    color: #d8aaff; /* Color lila */
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    color: #b5d9f0; /* Color azul claro */
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #6c63ff; /* Color azul fuerte */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #5a54e4; /* Azul más oscuro al pasar el ratón */
+}
+
+/* Estilo del mensaje */
+#message {
+    margin-top: 10px;
+    font-size: 16px;
+}
