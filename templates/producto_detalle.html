@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ producto.nombre }}</title>
+</head>
+<body>
+    <h1>{{ producto.nombre }}</h1>
+    <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+    <p><strong>Precio:</strong> {{ producto.precio }}</p>
+    <p><strong>Stock:</strong> {{ producto.stock }}</p>
+    <p><strong>Marca:</strong> {{ producto.marca }}</p>
+    <p><strong>Modelo:</strong> {{ producto.modelo }}</p>
+    <p><strong>Especificaciones:</strong> {{ producto.especificaciones }}</p>
+    <p><strong>Categoría:</strong> {{ producto.categoria.name }}</p>
+    
+    {% if producto.imagen_url %}
+    <h2>Imagen del Producto</h2>
+    <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" style="max-width: 100%; height: auto;">
+{% else %}
+    <p>No hay imagen disponible.</p>
+{% endif %}
+    
+    <a href="/">Volver al inicio</a>
+</body>
+</html>

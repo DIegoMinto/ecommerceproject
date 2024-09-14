@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_migrate import Migrate
-from models import db, Category, User 
+from models import db, Category, User, Producto
 from flask import send_from_directory
 from flask import render_template
+import os
+from werkzeug.utils import secure_filename
 
 
 
@@ -110,11 +112,128 @@ def login_user():
         return jsonify({"message": "Login successful", "user": {"id": user.id, "username": user.username}}), 200
     else:
         return jsonify({"message": "Invalid username or password"}), 401
- 
+    
+# Ruta para crear un producto y subir imágenes
+@app.route('/api/productos', methods=['POST'])
+def crear_producto():
+    # Verifica si la solicitud tiene archivos
+    if 'imagen' not in request.files:
+        return jsonify({"message": "No se ha proporcionado una imagen"}), 400
+
+    imagen = request.files['imagen']
+    if imagen.filename == '':
+        return jsonify({"message": "No se seleccionó ninguna imagen"}), 400
+
+    if imagen:
+        # Genera un nombre único para la imagen
+        imagen_filename = secure_filename(imagen.filename)
+        imagen_path = os.path.join('static', 'imagenes', imagen_filename)
+        imagen.save(imagen_path)
+        
+        # Construye la URL de la imagen para almacenar en la base de datos
+        imagen_url = f"/static/imagenes/{imagen_filename}"
+
+        # Obtén otros datos del formulario
+        data = request.form
+        nuevo_producto = Producto(
+            nombre=data['nombre'],
+            descripcion=data.get('descripcion'),
+            precio=float(data['precio']),
+            stock=int(data['stock']),
+            imagen_url=imagen_url,
+            categoria_id=int(data['categoria_id']),
+            marca=data['marca'],
+            modelo=data.get('modelo'),
+            especificaciones=data.get('especificaciones')
+        )
+        db.session.add(nuevo_producto)
+        db.session.commit()
+        return jsonify({"message": "Producto creado exitosamente"}), 201
+
+# Ruta para obtener un producto
+@app.route('/api/productos', methods=['GET'])
+def obtener_productos():
+    productos = Producto.query.all()
+    return jsonify([{
+        "id": producto.id,
+        "nombre": producto.nombre,
+        "descripcion": producto.descripcion,
+        "precio": producto.precio,
+        "stock": producto.stock,
+        "imagen_url": producto.imagen_url,
+        "categoria_id": producto.categoria_id,
+        "marca": producto.marca,
+        "modelo": producto.modelo,
+        "especificaciones": producto.especificaciones,
+        "fecha_creacion": producto.fecha_creacion
+    } for producto in productos]), 200
+    
+# Ruta para eliminar un producto por ID
+@app.route('/api/productos/<int:id>', methods=['DELETE'])
+def eliminar_producto(id):
+    producto = Producto.query.get(id)
+    
+    if not producto:
+        return jsonify({"message": "Producto no encontrado"}), 404
+    
+    db.session.delete(producto)
+    db.session.commit()
+    
+    return jsonify({"message": "Producto eliminado exitosamente"}), 200
+# Ruta para actualizar un producto por ID
+@app.route('/api/productos/<int:id>', methods=['PUT'])
+def actualizar_producto(id):
+    data = request.get_json()
+    producto = Producto.query.get(id)
+    
+    if not producto:
+        return jsonify({"message": "Producto no encontrado"}), 404
+    
+    if 'nombre' in data:
+        producto.nombre = data['nombre']
+    if 'descripcion' in data:
+        producto.descripcion = data.get('descripcion')
+    if 'precio' in data:
+        producto.precio = data['precio']
+    if 'stock' in data:
+        producto.stock = data['stock']
+    if 'imagen_url' in data:
+        producto.imagen_url = data['imagen_url']
+    if 'categoria_id' in data:
+        categoria = Category.query.get(data['categoria_id'])
+        if not categoria:
+            return jsonify({"message": "Categoría no encontrada"}), 404
+        producto.categoria_id = data['categoria_id']
+    if 'marca' in data:
+        producto.marca = data['marca']
+    if 'modelo' in data:
+        producto.modelo = data.get('modelo')
+    if 'especificaciones' in data:
+        producto.especificaciones = data.get('especificaciones')
+
+    db.session.commit()
+    
+    return jsonify({"message": "Producto actualizado exitosamente"}), 200
+
 # Ruta para la interfaz del login 
 @app.route('/login')
 def login():
     return render_template('login.html')
+
+# Ruta para mostrar el formulario de crear productos
+@app.route('/crear_producto', methods=['GET'])
+def crear_producto_form():
+    categorias = Category.query.all()  # Obtener todas las categorías
+    return render_template('crear_producto.html', categorias=categorias)
+
+# Ruta para mostrar un producto en navegador 
+@app.route('/productos/<int:id>', methods=['GET'])
+def mostrar_producto(id):
+    producto = Producto.query.get(id)
+    if producto is None:
+        return jsonify({"message": "Producto no encontrado"}), 404
+    return render_template('producto_detalle.html', producto=producto)
+
 
 # Inicializar la aplicación
 if __name__ == '__main__':
