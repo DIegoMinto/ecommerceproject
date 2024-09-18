@@ -1,5 +1,5 @@
-from flask import Blueprint, request, jsonify
-from extensions import db
+# controllers/product_controller.py
+from flask import Blueprint, request, render_template, jsonify
 from services.product_service import ProductService
 
 product_blueprint = Blueprint('product', __name__)
@@ -12,17 +12,31 @@ def get_products():
 
 @product_blueprint.route('/products', methods=['POST'])
 def create_product():
-    data = request.get_json()
-    product = product_service.create_product(data['nombre'], data['descripcion'], data['precio'], data['stock'], data['imagen_url'], data['categoria_id'], data['marca'], data['modelo'], data['especificaciones'])
+    data = request.form  # Cambiar de JSON a form data
+    imagen = request.files.get('imagen')
+    imagen_url = ''  # Procesa la imagen y guarda la URL
+    # Aquí deberías guardar la imagen y obtener su URL
+    
+    product = product_service.create_product(
+        nombre=data['nombre'],
+        descripcion=data['descripcion'],
+        precio=data['precio'],
+        stock=data['stock'],
+        imagen_url=imagen_url,
+        categoria_id=data['categoria_id'],
+        marca=data['marca'],
+        modelo=data['modelo'],
+        especificaciones=data['especificaciones']
+    )
     return jsonify(product.to_dict()), 201
 
 @product_blueprint.route('/products/<int:id>', methods=['GET'])
 def get_product(id):
-    product = product_service.get_products().filter_by(id=id).first()
+    product = product_service.get_product(id)
     if product:
-        return jsonify(product.to_dict())
+        return render_template('producto_detalle.html', producto=product)
     else:
-        return jsonify({"message": "Product not found"}), 404
+        return jsonify({"message": "Producto no encontrado"}), 404
 
 @product_blueprint.route('/products/<int:id>', methods=['PUT'])
 def update_product(id):

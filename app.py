@@ -35,12 +35,14 @@ def crear_producto_form():
     categorias = Category.query.all()  # Obtener todas las categorías
     return render_template('crear_producto.html', categorias=categorias)
 
+# app.py
 @app.route('/productos/<int:id>', methods=['GET'])
 def mostrar_producto(id):
     producto = Producto.query.get(id)
     if producto is None:
         return jsonify({"message": "Producto no encontrado"}), 404
     return render_template('producto_detalle.html', producto=producto)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -2,8 +2,10 @@ from models.product import Producto
 from models.category import Category
 from extensions import db
 from flask import jsonify
+from sqlalchemy.orm import joinedload
 
 
+# repositories/product_repository.py
 class ProductoRepository:
     def crear_producto(self, nombre, descripcion, precio, stock, imagen_url, categoria_id, marca, modelo, especificaciones):
         nuevo_producto = Producto(
@@ -23,6 +25,10 @@ class ProductoRepository:
 
     def obtener_productos(self):
         return Producto.query.all()
+
+    def obtener_producto_por_id(self, id):
+        # Carga la relación `categoria` junto con el producto
+        return Producto.query.options(joinedload(Producto.categoria)).get(id)
 
     def eliminar_producto(self, id):
         producto = Producto.query.get(id)
