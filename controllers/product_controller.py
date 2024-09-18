@@ -1,6 +1,7 @@
 # controllers/product_controller.py
 from flask import Blueprint, request, render_template, jsonify
 from services.product_service import ProductService
+import os
 
 product_blueprint = Blueprint('product', __name__)
 
@@ -12,11 +13,15 @@ def get_products():
 
 @product_blueprint.route('/products', methods=['POST'])
 def create_product():
-    data = request.form  # Cambiar de JSON a form data
+    data = request.form
     imagen = request.files.get('imagen')
-    imagen_url = ''  # Procesa la imagen y guarda la URL
-    # Aquí deberías guardar la imagen y obtener su URL
-    
+
+    if imagen:
+        imagen_url = f"imagenes/{imagen.filename}"
+        imagen.save(os.path.join('static/imagenes', imagen.filename))
+    else:
+        imagen_url = ''  # o algún valor por defecto
+
     product = product_service.create_product(
         nombre=data['nombre'],
         descripcion=data['descripcion'],
@@ -29,6 +34,7 @@ def create_product():
         especificaciones=data['especificaciones']
     )
     return jsonify(product.to_dict()), 201
+
 
 @product_blueprint.route('/products/<int:id>', methods=['GET'])
 def get_product(id):

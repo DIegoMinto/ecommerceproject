@@ -8,7 +8,7 @@ from sqlalchemy.orm import joinedload
 # repositories/product_repository.py
 class ProductoRepository:
     def crear_producto(self, nombre, descripcion, precio, stock, imagen_url, categoria_id, marca, modelo, especificaciones):
-        nuevo_producto = Producto(
+        producto = Producto(
             nombre=nombre,
             descripcion=descripcion,
             precio=precio,
@@ -19,9 +19,10 @@ class ProductoRepository:
             modelo=modelo,
             especificaciones=especificaciones
         )
-        db.session.add(nuevo_producto)
+        db.session.add(producto)
         db.session.commit()
-        return nuevo_producto
+        return producto
+
 
     def obtener_productos(self):
         return Producto.query.all()

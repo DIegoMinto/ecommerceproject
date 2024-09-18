@@ -7,6 +7,7 @@ class ProductService:
     def create_product(self, nombre, descripcion, precio, stock, imagen_url, categoria_id, marca, modelo, especificaciones):
         return self.repository.crear_producto(nombre, descripcion, precio, stock, imagen_url, categoria_id, marca, modelo, especificaciones)
 
+
     def get_products(self):
         return self.repository.obtener_productos()
 
