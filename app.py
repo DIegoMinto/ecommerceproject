@@ -8,6 +8,11 @@ from controllers.category_controller import category_blueprint
 from controllers.product_controller import product_blueprint
 from controllers.user_controller import user_blueprint
 from flask import send_from_directory
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ecommerce.db'
@@ -63,3 +68,4 @@ def producto_detalle(id):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
