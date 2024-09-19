@@ -43,7 +43,7 @@ def crear_producto_form():
     categorias = Category.query.all()  # Obtener todas las categorías
     return render_template('crear_producto.html', categorias=categorias)
 
-# app.py
+
 @app.route('/producto/<int:id>')
 def producto_detalle(id):
     producto = {
