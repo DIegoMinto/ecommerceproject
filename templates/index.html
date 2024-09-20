@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TecnoDILESA - Tu tienda de tecnología</title>
+</head>
+<body>
+    <h1>Bienvenido a TecnoDILESA</h1>
+    <p>Encuentra los mejores productos tecnológicos al mejor precio. ¡Explora nuestra selección y elige lo que más te convenga!</p>
+
+    <h2>Nuestras Categorías</h2>
+    <ul>
+        {% for categoria in categorias %}
+            <li><a href="{{ url_for('categoria_productos', id=categoria.id) }}">{{ categoria.name }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <h2>Productos Destacados</h2>
+    <div>
+        {% for producto in productos %}
+            <div>
+                <h3>{{ producto.nombre }}</h3>
+                <p>Precio: ${{ producto.precio }}</p>
+                <p>Stock disponible: {{ producto.stock }}</p>
+                <p>Categoría: {{ producto.categoria.name if producto.categoria else 'Sin categoría' }}</p>
+                
+                {% if producto.imagen_url %}
+                <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" style="max-width: 300px;">
+                {% endif %}
+                
+                <p><a href="{{ url_for('producto_detalle', id=producto.id) }}">Ver detalles del producto</a></p>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+
+    <footer>
+        <p>&copy; 2024 TecnoDILESA - Tu tienda de tecnología de confianza.</p>
+    </footer>
+</body>
+</html>

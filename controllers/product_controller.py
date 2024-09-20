@@ -1,6 +1,7 @@
 # controllers/product_controller.py
-from flask import Blueprint, request, render_template, jsonify
+from flask import Blueprint, request, render_template, jsonify, current_app
 from services.product_service import ProductService
+from werkzeug.utils import secure_filename
 import os
 
 product_blueprint = Blueprint('product', __name__)
@@ -17,10 +18,12 @@ def create_product():
     imagen = request.files.get('imagen')
 
     if imagen:
-        imagen_url = f"imagenes/{imagen.filename}"
-        imagen.save(os.path.join('static/imagenes', imagen.filename))
+        filename = secure_filename(imagen.filename)
+        imagen_url = f"/static/imagenes/{filename}"
+        imagen_path = os.path.join(current_app.root_path, 'static/imagenes', filename)
+        imagen.save(imagen_path)
     else:
-        imagen_url = ''  # o algún valor por defecto
+        imagen_url = '/static/imagenes/placeholder.jpg'  # Una imagen por defecto
 
     product = product_service.create_product(
         nombre=data['nombre'],
