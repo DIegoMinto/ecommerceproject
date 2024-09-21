@@ -16,6 +16,8 @@
     <p><strong>Categoría:</strong> {{ producto.categoria.name }}</p>
     {% if producto.imagen_url %}
     <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" style="max-width: 100%;">
+    <br>
+    <a href="{{ url_for('editar_producto_form', id=producto.id) }}">Editar producto</a>
 
 
     {% endif %}
