@@ -1,0 +1,234 @@
+/* General */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #011526;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Navbar estilos */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 25px 25px;
+    background-color: #011526;
+    color: #DE94F2;
+    user-select: none;
+}
+
+.navbar-left .logo {
+    font-size: 24px;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.logo:hover{
+    color: #DE94F2;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+.login-link {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+
+.login-link i {
+    margin-right: 8px; /* Espacio entre el ícono y el texto */
+}
+
+.login-link:hover {
+    color: #DE94F2; /* Efecto hover */
+}
+
+/*Seccion Bienvenida*/
+.seccion_bienvenida {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                url('fondo9.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 75vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    cursor: default;
+    user-select: none;
+}
+
+
+.seccion_bienvenida h1{
+    width: 50%;
+    margin: 0;
+    color: #A3B4BF;
+    text-align: center;
+    font-size: 3rem;
+    margin-top: 20px;
+}
+
+.seccion_bienvenida h1:hover{
+    color: #DE94F2;
+}
+
+#bienvenida{
+    width: 50%;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+#bienvenida:hover{
+    color: #DE94F2;
+}
+
+
+/* Estilo de la cabecera de la categoría */
+.categoria-header {
+    background-color: #5D5ABF;
+    padding: 30px;
+    text-align: center;
+    color: white;
+}
+
+.categoria-header h1 {
+    font-size: 2rem;
+    margin-top: 40px;
+    color: #A3B4BF;
+    text-align: center;
+    margin: 0;
+}
+
+.categoria-header h1:hover{
+    color: #DE94F2;
+}
+
+/* Sección de productos */
+.productos-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background-color: #011526;
+    padding: 40px 20px;
+}
+
+.producto-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 15px;
+    padding: 20px;
+    text-align: center;
+    width: 30%;
+    transition: transform 0.3s ease-in-out;
+}
+
+.producto-card:hover {
+    transform: scale(1.05);
+}
+
+.producto-imagen {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.producto-card h3 {
+    font-size: 1.2rem;
+    color: #5D5ABF;
+    margin-bottom: 10px;
+}
+
+.producto-card p {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.detalle-link {
+    text-decoration: none;
+    color: #5D5ABF;
+    font-weight: bold;
+    transition: color 0.3s;
+    cursor: pointer;
+    user-select: none;
+}
+
+.detalle-link:hover {
+    color: #DE94F2;
+}
+
+/* Footer */
+/* Footer */
+footer {
+    background-color: #5D5ABF;
+    padding: 35px 0;
+    text-align: center;
+    margin-top: 20px;
+    width: 100%;
+    bottom: 0;
+}
+
+footer a{
+    text-decoration: none;
+    color: #A3B4BF;
+    font-weight: bold;
+    font-size: 1.2rem;
+    background-color: #011526;
+    padding: 10px;
+    border-radius: 20px;
+
+}
+
+footer a:hover{
+    text-decoration: none;
+    color: #011526;
+    background-color: #DE94F2;
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+    .productos-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .producto-card {
+        width: 80%;
+    }
+}
+
+@media (max-width: 480px) {
+    .producto-card {
+        width: 100%;
+    }
+}
+
+/* Estilos para el scroll */
+body::-webkit-scrollbar {
+    width: 15px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background: #DE94F2;
+    border-radius: 8px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+    background: #A3B4BF;
+}
+
+body::-webkit-scrollbar-track {
+    background: #011526;
+    border-radius: 8px;
+}

@@ -1,34 +1,66 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ categoria.name }} - TecnoDILESA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles_categorias.css') }}">
 </head>
+
 <body>
-    <h1>Productos en la categoría: {{ categoria.name }}</h1>
-
-    {% if productos %}
-        <div>
-            {% for producto in productos %}
-                <div>
-                    <h3>{{ producto.nombre }}</h3>
-                    <p>Precio: ${{ producto.precio }}</p>
-                    <p>Stock disponible: {{ producto.stock }}</p>
-                    
-                    {% if producto.imagen_url %}
-                    <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" style="max-width: 300px;">
-                    {% endif %}
-                    
-                    <p><a href="{{ url_for('producto_detalle', id=producto.id) }}">Ver detalles del producto</a></p>
-                </div>
-                <hr>
-            {% endfor %}
+    <header class="navbar">
+        <div class="navbar-left">
+            <a href="/" class="logo">TecnoDILESA</a>
         </div>
-    {% else %}
-        <p>No hay productos en esta categoría.</p>
-    {% endif %}
+        <div class="navbar-right">
+            <a href="/login" class="login-link">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+        </div>
+    </header>
 
-    <a href="{{ url_for('lista_productos') }}">Volver a todas las categorías</a>
+    <div class="seccion_bienvenida">
+        <h1>Bienvenido a nuestra categoria {{ categoria.name }}</h1>
+        <div id="bienvenida">
+            <p>
+                Explora nuestra selección de productos únicos en {{ categoria.name }}. 
+                Desde las últimas tendencias hasta clásicos atemporales, aquí encontrarás 
+                todo lo que necesitas para satisfacer tus gustos y necesidades. 
+                ¡Disfruta de la experiencia de compra!
+            </p>
+        </div>
+    </div>
+
+    <section class="categoria-header">
+        <h1>Productos en la categoría: {{ categoria.name }}</h1>
+    </section>
+
+    <div class="productos-grid">
+        {% if productos %}
+            {% for producto in productos %}
+            <div class="producto-card">
+                <h3>{{ producto.nombre }}</h3>
+                <p class="precio">Precio: ${{ producto.precio }}</p>
+                <p class="stock">Stock disponible: {{ producto.stock }}</p>
+                
+                {% if producto.imagen_url %}
+                <img class="producto-imagen" src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}">
+                {% endif %}
+                
+                <p><a class="detalle-link" href="{{ url_for('producto_detalle', id=producto.id) }}">Ver detalles del producto</a></p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No hay productos en esta categoría.</p>
+        {% endif %}
+    </div>
+
+    <footer>
+        <a href="{{ url_for('lista_productos') }}" class="volver-link">Volver a todas las categorías</a>
+    </footer>
+
 </body>
+
 </html>

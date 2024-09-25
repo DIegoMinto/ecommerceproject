@@ -11,42 +11,42 @@ body {
 .navbar {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    background-color: #5D5ABF;
-    padding: 0px 15px 0px;
-    font-family: Arial, sans-serif;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin: 0;
-}
-
-.navbar .brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #0D0D0D;
-    text-decoration: none;
-}
-
-.navbar .brand:hover{
-    color: #ffffff;
-}
-
-.navbar .nav-links {
-    display: flex;
-    margin: 0;
-}
-
-.navbar .nav-links a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 1rem;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.navbar .nav-links a:hover {
+    padding: 25px 25px;
     background-color: #011526;
+    color: #DE94F2;
+}
+
+.navbar-left .logo {
+    font-size: 24px;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.logo:hover{
+    color: #DE94F2;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+.login-link {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+
+.login-link i {
+    margin-right: 8px; /* Espacio entre el ícono y el texto */
+}
+
+.login-link:hover {
+    color: #DE94F2; /* Efecto hover */
 }
 
 
@@ -198,6 +198,8 @@ div.product-item a {
     color: #5D5ABF;
     font-weight: bold;
     transition: color 0.3s;
+    cursor: pointer;
+    user-select: none;
 }
 
 div.product-item a:hover {
