@@ -1,0 +1,279 @@
+/* General */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #011526;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Navbar estilos */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #5D5ABF;
+    padding: 0px 15px 0px;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 0;
+}
+
+.navbar .brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #0D0D0D;
+    text-decoration: none;
+}
+
+.navbar .brand:hover{
+    color: #ffffff;
+}
+
+.navbar .nav-links {
+    display: flex;
+    margin: 0;
+}
+
+.navbar .nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.navbar .nav-links a:hover {
+    background-color: #011526;
+}
+
+
+/*Seccion Bienvenida*/
+.seccion_bienvenida {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2)), /* Capa oscura con opacidad */
+                url('fondo2.jpg') no-repeat top center fixed; /* Imagen de fondo */
+    background-size: cover;
+    height: 90vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    cursor: default;
+    user-select: none;
+}
+
+
+.seccion_bienvenida h1{
+    margin: 0;
+    color: #011526;
+    text-align: center;
+    font-size: 3rem;
+    margin-top: 20px;
+}
+
+.seccion_bienvenida h1:hover{
+    color: #5D5ABF;
+}
+
+#bienvenida{
+    width: 40%;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+#bienvenida:hover{
+    color: #DE94F2;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-top: 40px;
+    color: #DE94F2;
+    text-align: center;
+    margin: 0;
+}
+
+.subtitles{
+    margin: 40px;
+}
+
+
+/* Navigation (categories) */
+.categorias {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: #5D5ABF;
+    margin: 20px 0;
+}
+
+.categoria {
+    margin: 20px;
+    text-align: center;
+    max-width: 200px;
+}
+
+.imagen-categoria {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #A3B4BF;
+    padding: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.categoria a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.categoria:hover .imagen-categoria {
+    transform: scale(1.1);
+    border: 5px solid #DE94F2;
+}
+
+.categoria p {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #011526;
+    font-weight: bold;
+}
+
+
+
+/* Estilos para la sección de productos */
+div.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+div.product-item {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 15px;
+    padding: 20px;
+    text-align: center;
+    width: 30%; /* Cada producto ocupará aproximadamente un 30% del contenedor */
+    box-sizing: border-box;
+    transition: transform 0.3s;
+}
+
+div.product-item:hover {
+    transform: scale(1.05); /* Efecto de aumento al pasar el ratón */
+}
+
+div.product-item img {
+    width: 100%; /* Las imágenes ocuparán el 100% del ancho del contenedor del producto */
+    height: auto; /* Mantiene la proporción de la imagen */
+    max-width: 200px; /* Limita el ancho máximo de las imágenes */
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+/* Estilo para los títulos y descripciones de los productos */
+div.product-item h3 {
+    font-size: 1.2rem;
+    color: #5D5ABF;
+    margin-bottom: 10px;
+}
+
+div.product-item p {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Estilo para el enlace de detalles del producto */
+div.product-item a {
+    text-decoration: none;
+    color: #5D5ABF;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+div.product-item a:hover {
+    color: #DE94F2;
+}
+
+
+/* Footer */
+footer {
+    background-color: #5D5ABF;
+    color: #fff;
+    padding: 30px 0;
+    text-align: center;
+    margin-top: 20px;
+    width: 100%;
+    bottom: 0;
+}
+
+/* Media Query for Smaller Screens */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar .nav-links {
+        margin-top: 10px;
+    }
+    
+    li {
+        flex: 0 1 45%;
+    }
+
+    div.product-item {
+        width: 45%;
+    }
+}
+
+@media (max-width: 480px) {
+    li {
+        flex: 0 1 100%;
+    }
+
+    div.product-item {
+        width: 100%;
+    }
+}
+
+
+/* Tamaño del scroll */
+body::-webkit-scrollbar {
+    width: 15px;
+}
+
+/* Estilos barra (thumb) de scroll */
+body::-webkit-scrollbar-thumb {
+    background: #DE94F2; /* Color principal del thumb */
+    border-radius: 8px;
+}
+
+body::-webkit-scrollbar-thumb:active {
+    background-color: #5D5ABF; /* Color al hacer clic en el thumb */
+}
+
+body::-webkit-scrollbar-thumb:hover {
+    background: #A3B4BF; /* Color al pasar el cursor sobre el thumb */
+}
+
+/* Estilos track de scroll */
+body::-webkit-scrollbar-track {
+    background: #011526; /* Color del track del scroll */
+    border-radius: 8px;
+}
+  
+body::-webkit-scrollbar-track:hover, 
+body:-webkit-scrollbar-track:active {
+    background: #0D0D0D; /* Color del track cuando el scroll está activo o al pasar el cursor */
+}
+

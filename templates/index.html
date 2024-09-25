@@ -4,45 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TecnoDILESA - Tu tienda de tecnología</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles_index.css') }}">
 </head>
 <body>
-    <h1>Bienvenido a TecnoDILESA</h1>
-    <p>Encuentra los mejores productos tecnológicos al mejor precio. ¡Explora nuestra selección y elige lo que más te convenga!</p>
+    <header>
+        <nav class="navbar">
+            <a href="#" class="brand">TecnoDILESA</a>
+            <div class="nav-links">
+                <a href="{{ url_for('login') }}">Login</a>
+            </div>
+        </nav>
+    </header>
     
-    <h2>Nuestras Categorías</h2>
-    <ul>
+    <div class="seccion_bienvenida">
+        <h1>Bienvenido a TecnoDILESA</h1>
+        <div id="bienvenida">
+            <p>Encuentra los mejores productos tecnológicos al mejor precio. ¡Explora nuestra selección y elige lo que más te convenga!</p>
+        </div>
+    </div>
+
+    
+    <div class="subtitles">
+        <h2>Nuestras Categorías</h2>
+    </div>
+
+    <div class="categorias">
         {% if categorias %}
             {% for categoria in categorias %}
-                <li><a href="{{ url_for('categoria_productos', id=categoria.id) }}">{{ categoria.name }}</a></li>
+                <div class="categoria">
+                    <a href="{{ url_for('categoria_productos', id=categoria.id) }}">
+                        <img src="/static/imagenes/categorias/{{ categoria.name | lower }}.png" alt="{{ categoria.name }}" class="imagen-categoria">
+                        <p>{{ categoria.name }}</p>
+                    </a>
+                </div>
             {% endfor %}
         {% else %}
-            <li>No hay categorías disponibles.</li>
+            <div class="categoria">
+                <p>No hay categorías disponibles.</p>
+            </div>
         {% endif %}
-    </ul>
-    
+    </div>
 
-    <h2>Productos Destacados</h2>
-    <div>
+    <div class="subtitles">
+        <h2>Productos Destacados</h2>
+    </div>
+    <div class="product-container">
         {% for producto in productos %}
-            <div>
+            <div class="product-item">
                 <h3>{{ producto.nombre }}</h3>
                 <p>Precio: ${{ producto.precio }}</p>
                 <p>Stock disponible: {{ producto.stock }}</p>
                 <p>Categoría: {{ producto.categoria.name if producto.categoria else 'Sin categoría' }}</p>
                 
                 {% if producto.imagen_url %}
-                <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" style="max-width: 300px;">
+                <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}">
                 {% endif %}
                 
                 <p><a href="{{ url_for('producto_detalle', id=producto.id) }}">Ver detalles del producto</a></p>
-
             </div>
-            <hr>
         {% endfor %}
-
-         <!-- Botón para editar producto -->
-
     </div>
+    
 
     <footer>
         <p>&copy; 2024 TecnoDILESA - Tu tienda de tecnología de confianza.</p>
