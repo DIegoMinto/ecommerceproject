@@ -1,4 +1,4 @@
-gunicorn==20.1.0  # Cambia a la versión que prefieras
+gunicorn==20.1.0
 alembic==1.13.2
 aniso8601==9.0.1
 blinker==1.8.2

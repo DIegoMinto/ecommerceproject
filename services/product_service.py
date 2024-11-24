@@ -1,21 +1,38 @@
-from repositories.product_repository import ProductoRepository
+# services/product_service.py
+from models.product import Producto
+from extensions import db
+import os
 
 class ProductService:
-    def __init__(self):
-        self.repository = ProductoRepository()
+    @staticmethod
+    def get_all_products():
+        return Producto.query.all()
 
-    def create_product(self, nombre, descripcion, precio, stock, imagen_url, categoria_id, marca, modelo, especificaciones):
-        return self.repository.crear_producto(nombre, descripcion, precio, stock, imagen_url, categoria_id, marca, modelo, especificaciones)
+    @staticmethod
+    def get_product_by_id(id):
+        return Producto.query.get_or_404(id)
 
+    @staticmethod
+    def get_products_by_category(category_id):
+        return Producto.query.filter_by(categoria_id=category_id).all()
 
-    def get_products(self):
-        return self.repository.obtener_productos()
+    @staticmethod
+    def update_product(id, form_data, file_data):
+        producto = Producto.query.get_or_404(id)
 
-    def get_product(self, id):
-        return self.repository.obtener_producto_por_id(id)
+        # Actualizar los datos del producto
+        producto.nombre = form_data['nombre']
+        producto.precio = float(form_data['precio'])
+        producto.stock = int(form_data['stock'])
+        producto.descripcion = form_data['descripcion']
+        producto.categoria_id = form_data['categoria_id']
 
-    def delete_product(self, id):
-        return self.repository.eliminar_producto(id)
-
-    def update_product(self, id, nombre, descripcion, precio, stock, imagen_url, categoria_id, marca, modelo, especificaciones):
-        return self.repository.actualizar_producto(id, nombre, descripcion, precio, stock, imagen_url, categoria_id, marca, modelo, especificaciones)
+        # Si se subió una nueva imagen
+        if 'imagen' in file_data:
+            imagen = file_data['imagen']
+            if imagen.filename != '':
+                imagen_path = os.path.join('static', 'imagenes', imagen.filename)
+                imagen.save(imagen_path)
+                producto.imagen_url = f"/static/imagenes/{imagen.filename}"
+        
+        db.session.commit()

@@ -1,15 +1,16 @@
 # app.py
-from flask import Flask, render_template, jsonify, send_from_directory
-from flask import request, redirect, url_for
+from flask import Flask, render_template, jsonify, send_from_directory, request, redirect, url_for
 from flask_cors import CORS
 from extensions import db, migrate
-from models.product import Producto
-from models.user import User
-from models.category import Category
-from services.category_service import CategoryService
 from controllers.category_controller import category_blueprint
 from controllers.product_controller import product_blueprint
 from controllers.user_controller import user_blueprint
+from controllers.cart_controller import cart_blueprint  # Agrega esta línea para el carrito
+from services.carrito_service import CarritoService  # Importa el servicio de carrito
+from services.product_service import ProductService  # Importa el servicio de productos
+from models.product import Producto
+from models.category import Category
+
 import os
 
 app = Flask(__name__, static_url_path='/static')
@@ -31,6 +32,7 @@ migrate.init_app(app, db)
 app.register_blueprint(category_blueprint, url_prefix='/api')
 app.register_blueprint(product_blueprint, url_prefix='/api')
 app.register_blueprint(user_blueprint, url_prefix='/api')
+app.register_blueprint(cart_blueprint, url_prefix='/api')  # Registra el blueprint del carrito
 
 # Crear las tablas en la base de datos
 with app.app_context():
@@ -58,9 +60,9 @@ def serve_static(filename):
 @app.route('/')
 @app.route('/index.html')
 def lista_productos():
-    productos = Producto.query.all()
+    productos = ProductService.get_all_products()  # Usamos el servicio para obtener los productos
     categorias = Category.query.all()
-    return render_template('index.html', productos=productos,categorias=categorias)
+    return render_template('index.html', productos=productos, categorias=categorias)
 
 @app.route('/login')
 def login():
@@ -73,44 +75,45 @@ def crear_producto_form():
 
 @app.route('/producto/<int:id>')
 def producto_detalle(id):
-    producto = Producto.query.get_or_404(id)
+    producto = ProductService.get_product_by_id(id)  # Usamos el servicio para obtener el producto
     return render_template('producto_detalle.html', producto=producto)
 
 @app.route('/producto/editar/<int:id>', methods=['GET'])
 def editar_producto_form(id):
-    producto = Producto.query.get_or_404(id)
+    producto = ProductService.get_product_by_id(id)  # Usamos el servicio para obtener el producto
     categorias = Category.query.all()
     return render_template('editar_producto.html', producto=producto, categorias=categorias)
 
 @app.route('/producto/editar/<int:id>', methods=['POST'])
 def editar_producto(id):
-    producto = Producto.query.get_or_404(id)
-    
-    # Actualizar los datos del producto
-    producto.nombre = request.form['nombre']
-    producto.precio = float(request.form['precio'])
-    producto.stock = int(request.form['stock'])
-    producto.descripcion = request.form['descripcion']
-    producto.categoria_id = request.form['categoria_id']
-
-    # Si se subió una nueva imagen
-    if 'imagen' in request.files:
-        imagen = request.files['imagen']
-        if imagen.filename != '':
-            imagen_path = os.path.join(app.config['UPLOAD_FOLDER'], imagen.filename)
-            imagen.save(imagen_path)
-            producto.imagen_url = f"/static/imagenes/{imagen.filename}"
-    
-    db.session.commit()
-    
-    return redirect(url_for('producto_detalle', id=producto.id))
+    # Actualizamos los datos del producto usando el servicio
+    ProductService.update_product(id, request.form, request.files)
+    return redirect(url_for('producto_detalle', id=id))
 
 @app.route('/categoria/<int:id>')
 def categoria_productos(id):
     categoria = Category.query.get_or_404(id)
-    productos = Producto.query.filter_by(categoria_id=id).all()
+    productos = ProductService.get_products_by_category(id)  # Usamos el servicio para obtener los productos de una categoría
     return render_template('categoria_productos.html', categoria=categoria, productos=productos)
 
+# Rutas API para manejar el carrito
+@app.route('/api/carrito/<int:id>', methods=['GET'])
+def get_cart(id):
+    carrito = CarritoService.get_carrito_by_id(id)  # Usamos el servicio de carrito
+    if carrito:
+        productos = carrito.get_productos()  # Accede a los productos asociados
+        return jsonify([producto.to_dict() for producto in productos])
+    else:
+        return jsonify({'message': 'Carrito no encontrado'}), 404
+
+@app.route('/api/carrito/<int:id>/comprar', methods=['DELETE'])
+def comprar_carrito(id):
+    try:
+        # Llama al servicio para completar la compra y eliminar los productos o el carrito
+        CarritoService.complete_purchase_and_delete_all(id)
+        return jsonify({'message': 'Compra realizada y carrito eliminado exitosamente'}), 200
+    except Exception as e:
+        return jsonify({'message': str(e)}), 400
 
 if __name__ == '__main__':
     update_image_urls()  # Actualizar URLs de imágenes al iniciar la aplicación
