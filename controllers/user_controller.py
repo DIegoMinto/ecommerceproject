@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from extensions import db
 from services.user_service import UserService
 
@@ -19,4 +19,14 @@ def register_user():
 @user_blueprint.route('/login', methods=['POST'])
 def login_user():
     data = request.get_json()
-    return user_service.login_user(data['username'], data['password'])
+    username = data.get('username')
+    password = data.get('password')
+
+    # Llamar al servicio para intentar hacer login
+    user = user_service.login_user(username, password)
+
+    if user:
+        session['user_id'] = user.id  # Ya no es un tuple, es un objeto user
+        return jsonify({"message": "Login successful", "user": {"id": user.id, "username": user.username}}), 200
+    else:
+        return jsonify({"message": "Invalid username or password"}), 401

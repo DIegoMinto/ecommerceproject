@@ -14,6 +14,9 @@
                 <a href="/" class="logo">TecnoDILESA</a>
             </div>
             <div class="navbar-right">
+                <a href="/api/cart/1" class="cart-link">
+                    <i class="fas fa-shopping-cart"></i> Ver carrito
+                </a>
                 <a href="/login" class="login-link">
                     <i class="fas fa-sign-in-alt"></i> Login
                 </a>
@@ -64,12 +67,38 @@
                 {% if producto.imagen_url %}
                 <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}">
                 {% endif %}
-                
                 <p><a href="{{ url_for('producto_detalle', id=producto.id) }}">Ver detalles del producto</a></p>
+                <button 
+                class="btn-agregar-carrito" 
+                data-producto-id="{{ producto.id }}" 
+                data-action="{{ url_for('cart.add_to_cart', user_id=1) }}">
+                Agregar al carrito
+            </button>
             </div>
         {% endfor %}
     </div>
     
+    <script>
+        document.querySelectorAll('.btn-agregar-carrito').forEach(button => {
+            button.addEventListener('click', () => {
+                const productoId = button.getAttribute('data-producto-id');
+                const actionUrl = button.getAttribute('data-action');
+    
+                fetch(actionUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ producto_id: productoId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message || 'Producto agregado al carrito');
+                })
+                .catch(err => console.error(err));
+            });
+        });
+    </script>
 
     <footer>
         <p>&copy; 2024 TecnoDILESA - Tu tienda de tecnología de confianza.</p>

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, flash, render_template, request, jsonify, session, url_for, redirect, g
 from services.carrito_service import CarritoService
 
 cart_blueprint = Blueprint('cart', __name__)
@@ -54,3 +54,25 @@ def delete_cart(id):
         return jsonify(result), 200
     except ValueError as e:
         return jsonify({'message': str(e)}), 400
+
+@cart_blueprint.before_request
+def require_login():
+    if not session.get('user_id'):
+        return jsonify({"message": "Debe iniciar sesión para acceder al carrito"}), 401
+    
+@cart_blueprint.route('/carrito', methods=['GET'])
+def ver_carrito():
+    # Validar que el usuario esté logueado
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('user_controller.login'))  # Redirige al login si no está logueado
+    
+    # Obtener los productos del carrito
+    try:
+        carrito = CarritoService.get_cart(user_id)
+    except ValueError as e:
+        carrito = {'productos': [], 'carrito_id': None}
+        flash(str(e), 'error')
+
+    # Renderizar plantilla del carrito
+    return render_template('carrito.html', carrito=carrito)

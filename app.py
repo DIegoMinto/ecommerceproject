@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, render_template, jsonify, send_from_directory, request, redirect, url_for
+from flask import Flask, render_template, jsonify, send_from_directory, request, redirect, session, url_for
 from flask_cors import CORS
 from extensions import db, migrate
 from controllers.category_controller import category_blueprint
@@ -15,6 +15,8 @@ import os
 
 app = Flask(__name__, static_url_path='/static')
 CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+app.secret_key ='1234'
 
 # Configuración de la base de datos
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ecommerce.db'
@@ -60,10 +62,10 @@ def serve_static(filename):
 @app.route('/')
 @app.route('/index.html')
 def lista_productos():
-    productos = ProductService.get_all_products()  # Usamos el servicio para obtener los productos
+    productos = ProductService.get_all_products()
     categorias = Category.query.all()
-    return render_template('index.html', productos=productos, categorias=categorias)
-
+    username = session.get('username')  # Obtener el nombre del usuario logueado
+    return render_template('index.html', productos=productos, categorias=categorias, username=username)
 @app.route('/login')
 def login():
     return render_template('login.html')
