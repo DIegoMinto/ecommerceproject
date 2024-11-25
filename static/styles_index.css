@@ -224,6 +224,22 @@ div.product-item a:hover {
     color: #DE94F2;
 }
 
+/* Estilo para el botón */
+button {
+    background-color: #5D5ABF;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #DE94F2;
+}
+
 
 /* Footer */
 footer {
