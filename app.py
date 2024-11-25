@@ -98,6 +98,46 @@ def crear_producto_form():
     categorias = Category.query.all()
     return render_template('crear_producto.html', categorias=categorias)
 
+
+@app.route('/crear_producto', methods=['POST'])
+def crear_producto():
+    # Obtener datos del formulario
+    nombre = request.form.get('nombre')
+    descripcion = request.form.get('descripcion')
+    precio = request.form.get('precio')
+    stock = request.form.get('stock')
+    categoria_id = request.form.get('categoria_id')
+    marca = request.form.get('marca')
+    modelo = request.form.get('modelo')
+    especificaciones = request.form.get('especificaciones')
+
+    # Manejar la imagen
+    imagen = request.files.get('imagen')
+    if imagen:
+        imagen_path = os.path.join(app.config['UPLOAD_FOLDER'], imagen.filename)
+        imagen.save(imagen_path)
+        imagen_url = f"/static/imagenes/{imagen.filename}"
+    else:
+        imagen_url = None
+
+    # Crear y guardar el producto
+    nuevo_producto = Producto(
+        nombre=nombre,
+        descripcion=descripcion,
+        precio=precio,
+        stock=stock,
+        imagen_url=imagen_url,
+        categoria_id=categoria_id,
+        marca=marca,
+        modelo=modelo,
+        especificaciones=especificaciones
+    )
+    db.session.add(nuevo_producto)
+    db.session.commit()
+
+    return redirect(url_for('lista_productos'))
+
+
 @app.route('/producto/<int:id>')
 def producto_detalle(id):
     producto = ProductService.get_product_by_id(id)
