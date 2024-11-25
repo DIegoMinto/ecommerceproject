@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify, session
-from extensions import db
 from services.user_service import UserService
 
 user_blueprint = Blueprint('user', __name__)
 
+# Crear la instancia de UserService
 user_service = UserService()
 
 @user_blueprint.route('/users', methods=['GET'])
@@ -13,6 +13,12 @@ def get_users():
 @user_blueprint.route('/users', methods=['POST'])
 def register_user():
     data = request.get_json()
+    
+    # Validar si los campos necesarios existen
+    if 'username' not in data or 'email' not in data or 'password' not in data or 'rol' not in data:
+        return jsonify({"message": "Missing required fields"}), 400
+    
+    # Si los campos están presentes, registramos al usuario
     user = user_service.register_user(data['username'], data['email'], data['password'], data['rol'])
     return jsonify(user.to_dict()), 201
 

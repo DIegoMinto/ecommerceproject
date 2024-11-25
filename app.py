@@ -108,6 +108,11 @@ def get_cart(id):
     else:
         return jsonify({'message': 'Carrito no encontrado'}), 404
 
+@app.route('/user/create_account')
+def create_account():
+    return render_template('create_account.html')  # Este es el HTML para la creación de cuentas
+
+
 @app.route('/api/carrito/<int:id>/comprar', methods=['DELETE'])
 def comprar_carrito(id):
     try:
