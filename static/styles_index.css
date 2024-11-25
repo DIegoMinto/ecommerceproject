@@ -50,6 +50,24 @@ body {
 }
 
 
+.cart-link {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+.cart-link i {
+    margin-right: 8px; /* Espacio entre el ícono y el texto */
+}
+
+.cart-link:hover {
+    color: #DE94F2; /* Efecto hover */
+}
+
+
+
 /*Seccion Bienvenida*/
 .seccion_bienvenida {
     background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2)), /* Capa oscura con opacidad */

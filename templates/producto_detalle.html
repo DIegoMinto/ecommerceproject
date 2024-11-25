@@ -24,13 +24,20 @@
                 <p><strong>Modelo:</strong> {{ producto.modelo }}</p>
                 <p><strong>Especificaciones:</strong> {{ producto.especificaciones }}</p>
                 <p><strong>Categoría:</strong> {{ producto.categoria.name }}</p>
-                <a href="{{ url_for('editar_producto_form', id=producto.id) }}">Editar producto</a>
-                <button 
-                    class="btn-agregar-carrito" 
-                    data-producto-id="{{ producto.id }}" 
-                    data-action="{{ url_for('cart.add_to_cart', user_id=1) }}">
-                    Agregar al carrito
-                </button>
+
+                {% if session.get('username') %}
+                    <a href="{{ url_for('editar_producto_form', id=producto.id) }}">Editar producto</a>
+                    <button 
+                        class="btn-agregar-carrito" 
+                        data-producto-id="{{ producto.id }}" 
+                        data-action="{{ url_for('cart.add_to_cart', user_id=session.get('user_id')) }}">
+                        Agregar al carrito
+                    </button>
+                {% else %}
+                    <p>Para agregar al carrito, debes <a href="{{ url_for('login') }}">iniciar sesión</a>.</p><br>
+                    <p>Session username: {{ username }}</p>
+
+                {% endif %}
                 <br><br>
                 <button onclick="window.location.href='/'">Volver al inicio</button>
             </div>
@@ -41,8 +48,8 @@
         document.querySelectorAll('.btn-agregar-carrito').forEach(button => {
             button.addEventListener('click', () => {
                 const productoId = button.getAttribute('data-producto-id');
-                const actionUrl = button.getAttribute('data-action');
-    
+                const actionUrl = button.getAttribute('data-action');  // Verifica que este atributo tenga la URL correcta
+
                 fetch(actionUrl, {
                     method: 'POST',
                     headers: {

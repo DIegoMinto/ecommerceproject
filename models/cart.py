@@ -11,6 +11,7 @@ class Carrito(db.Model):
     productos = db.relationship('CarritoProducto', backref='carrito', lazy=True)
 
     def get_productos(self):
+        # Retorna los productos asociados al carrito
         return [carrito_producto.producto for carrito_producto in self.productos]
 
 class CarritoProducto(db.Model):
